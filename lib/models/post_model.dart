@@ -1,0 +1,1 @@
+//model for what a post would be
