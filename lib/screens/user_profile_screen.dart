@@ -1,45 +1,60 @@
-//user profile screen
-//profile of a user
-
-/*
-Showing users profile picture, and short description of themself
-Option to edit their own profile
-Look through the users posts
-*/
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:social_media_app/services/auth_service.dart';
+import 'package:social_media_app/services/firestore_service.dart';
 
 class ProfileScreen extends StatelessWidget {
-  final String username;
-  final String profileImageUrl;
+  final String userID;
+  final AuthService _auth = AuthService();
+  final FirestoreService _firestoreService = FirestoreService();
 
-  const ProfileScreen({
+  ProfileScreen({
     Key? key,
-    required this.username,
-    required this.profileImageUrl,
+    required this.userID,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 60,
-              backgroundImage: AssetImage(profileImageUrl),
-              backgroundColor: Colors.grey[300],
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Username: $username',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            // Add more profile information here
-          ],
-        ),
-      ),
+    return FutureBuilder<Map<String, dynamic>>(
+      future: _firestoreService.getUserData(userID),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator(); // Show loading indicator while fetching user data
+        } else {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            final userData = snapshot.data;
+            if (userData != null && userData.isNotEmpty) {
+              // Grabs the user data from the snapshot - which is a map from the Firestore document users according to that user's ID
+              //Using getUserData function from firestore_service.dart to deal with that.
+              final profileImageUrl = userData['pfpUrl'];
+              final username = userData['username'];
+
+              return Scaffold(
+                appBar: AppBar(
+                  title: Text('Profile'),
+                ),
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (profileImageUrl != null)
+                        CircleAvatar(
+                          radius: 50,
+                          backgroundImage: NetworkImage(profileImageUrl),
+                        ),
+                      if (username != null) Text('Username: $username'),
+                    ],
+                  ),
+                ),
+              );
+            } else {
+              return Text('User not found');
+            }
+          }
+        }
+      },
     );
   }
 }
