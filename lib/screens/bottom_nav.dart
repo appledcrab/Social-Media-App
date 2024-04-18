@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:social_media_app/screens/message_screen.dart';
 import 'package:social_media_app/screens/user_profile_screen.dart';
 import 'package:social_media_app/screens/login/signin.dart'; // Import your sign-in screen
 import 'package:social_media_app/services/auth_service.dart';
@@ -53,8 +54,7 @@ class _BottomNavState extends State<BottomNav> {
             //Adding posts screen
           ),
           Scaffold(
-            appBar: AppBar(title: Text('Screen 4')),
-            body: Center(child: Text('Screen 4')),
+            body: RoomsPage(),
             //Adding chats screen
           ),
           Scaffold(

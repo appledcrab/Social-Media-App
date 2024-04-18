@@ -60,9 +60,9 @@ class AuthService {
       await _firestore.collection('users').doc(uid).set({
         'createdAt': FieldValue.serverTimestamp(),
         'bio': "I'm new here! Say hi!",
-        'pfpUrl':
+        'photoUrl':
             'https://firebasestorage.googleapis.com/v0/b/social-media-app-988e8.appspot.com/o/app_assets%2Fdefault.jpg?alt=media',
-        'username': 'New User', //this is just a temp display name
+        'displayname': 'New User', //this is just a temp display name
       });
     } catch (e) {
       print('Error creating user document: $e');

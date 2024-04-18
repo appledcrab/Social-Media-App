@@ -4,6 +4,7 @@ class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 //This function fetches the user data from Firestore using the user's ID
+
   Future<Map<String, dynamic>> getUserData(String userID) async {
     try {
       DocumentSnapshot snapshot =
