@@ -24,12 +24,11 @@ class _BottomNavState extends State<BottomNav> {
 
   Future<void> _getCurrentUser() async {
     currentUser = (await authMethods.getCurrentUser())!;
-    setState(() {}); // Trigger a rebuild to reflect the current user
+    setState(() {}); // rebuild to reflect the current user
   }
 
   @override
   Widget build(BuildContext context) {
-    // Only build the bottom navigation bar if the current user is available
     if (currentUser != null) {
       PersistentTabController _controller =
           PersistentTabController(initialIndex: 0);
@@ -55,7 +54,7 @@ class _BottomNavState extends State<BottomNav> {
           ),
           Scaffold(
             body: RoomsPage(),
-            //Adding chats screen
+            //Goes to chat screen that shows all the rooms
           ),
           Scaffold(
             body: ProfileScreen(userID: currentUser.uid),
@@ -121,11 +120,7 @@ class _BottomNavState extends State<BottomNav> {
               icon: Icon(Icons.exit_to_app),
               onPressed: () {
                 print("Sign out");
-                authMethods.signOut();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => SignIn()),
-                );
+                authMethods.signOut(context);
               },
             ),
           ],

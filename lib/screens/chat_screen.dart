@@ -38,12 +38,13 @@ class ChatScreen extends StatelessWidget {
                   room.id,
                 );
               },
+              onMessageLongPress: (context, p1) =>
+                  _showDeleteMessageDialog(context, p1),
               showUserNames: true,
               showUserAvatars: true,
               user: types.User(id: user!.uid),
               onAvatarTap: (user) {
-                print('Tapped on avatar of user: $user');
-                // Open user profile
+                // tapping on avatar opens their profile
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => ProfileScreen(userID: user.id),
@@ -54,6 +55,35 @@ class ChatScreen extends StatelessWidget {
           }
         },
       ),
+    );
+  }
+
+  // confirming deleting message
+  Future<void> _showDeleteMessageDialog(
+      BuildContext context, types.Message message) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Delete Message?'),
+          content: Text('Are you sure you want to delete this message?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                FirebaseChatCore.instance.deleteMessage(room.id, message.id);
+                Navigator.pop(context);
+              },
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

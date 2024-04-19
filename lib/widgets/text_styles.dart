@@ -15,5 +15,8 @@ InputDecoration textFieldInputDecoration(String hintText) {
 }
 
 TextStyle biggerTextStyle() {
-  return TextStyle(color: const Color.fromARGB(255, 59, 18, 18), fontSize: 17);
+  return TextStyle(
+      color: const Color.fromARGB(255, 59, 18, 18),
+      fontSize: 17,
+      fontWeight: FontWeight.bold);
 }

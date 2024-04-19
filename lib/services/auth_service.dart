@@ -1,9 +1,10 @@
 //authentication service to handle user authentication
-
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
+import 'package:social_media_app/screens/login/signin.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -38,13 +39,13 @@ class AuthService {
   //   }
   // }
   Future<UserCredential> registerWithEmailAndPassword(
-      String email, String password) async {
+      String email, String password, String username) async {
     try {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
       // Create or update the user in both Firestore and flutter_chat_core
       if (userCredential.user != null) {
-        await _createOrUpdateChatUser(userCredential.user!);
+        await _createOrUpdateChatUser(userCredential.user!, username);
       }
       return userCredential;
     } catch (e) {
@@ -53,13 +54,13 @@ class AuthService {
     }
   }
 
-  Future<void> _createOrUpdateChatUser(User user) async {
+  Future<void> _createOrUpdateChatUser(User user, String username) async {
     final userData = {
       'createdAt': FieldValue.serverTimestamp(),
       'bio': "I'm new here! Say hi!",
       'photoUrl':
           'https://firebasestorage.googleapis.com/v0/b/social-media-app-988e8.appspot.com/o/app_assets%2Fdefault.jpg?alt=media',
-      'displayName': 'New User', // This can be any name the user chooses
+      'displayName': username, // This can be any name the user chooses
     };
 
     // Create user document in Firestore
@@ -82,8 +83,35 @@ class AuthService {
   }
 
   // Sign out
-  Future<void> signOut() async {
-    await _auth.signOut();
+  Future<void> signOut(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Sign Out'),
+          content: Text('Are you sure you want to sign out?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await _auth.signOut();
+                print("Sign out button should have showed up and pressed");
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignIn()),
+                );
+              },
+              child: Text('Sign Out'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   // Get current user

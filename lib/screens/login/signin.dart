@@ -65,6 +65,8 @@ class _SignInState extends State<SignIn> {
     }
   }
 
+  bool _isPressed = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,23 +115,42 @@ class _SignInState extends State<SignIn> {
               height: 16,
             ),
             GestureDetector(
-              onTap: () {
-                // Sign in
-                signIn();
+              onTapDown: (_) {
+                setState(() {
+                  _isPressed = true;
+                });
               },
-              child: Container(
+              onTapUp: (_) {
+                setState(() {
+                  _isPressed = false;
+                });
+                signIn(); // Perform the sign-up action
+              },
+              onTapCancel: () {
+                setState(() {
+                  _isPressed = false;
+                });
+              },
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 100), //small animation
                 padding: EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    gradient: LinearGradient(
-                      colors: [
-                        const Color(0xff007EF4),
-                        Color.fromARGB(255, 86, 188, 42)
-                      ],
-                    )),
+                  borderRadius: BorderRadius.circular(30),
+                  gradient: LinearGradient(
+                    colors: _isPressed // visual change for on click
+                        ? [
+                            Color.fromARGB(255, 244, 191, 0),
+                            Color.fromARGB(255, 86, 188, 42),
+                          ]
+                        : [
+                            const Color(0xff007EF4),
+                            Color.fromARGB(255, 86, 188, 42),
+                          ],
+                  ),
+                ),
                 width: MediaQuery.of(context).size.width,
                 child: Text(
-                  "Sign In",
+                  "Sign Up",
                   style: biggerTextStyle(),
                   textAlign: TextAlign.center,
                 ),
@@ -143,7 +164,6 @@ class _SignInState extends State<SignIn> {
             ),
             GestureDetector(
               onTap: () {
-                // Navigate to SignUp screen
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => SignUp()),

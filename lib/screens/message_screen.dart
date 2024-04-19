@@ -6,6 +6,7 @@ import 'chat_screen.dart';
 
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:social_media_app/services/chat_service.dart';
+import 'package:social_media_app/widgets/text_styles.dart';
 
 class RoomsPage extends StatelessWidget {
   RoomsPage({Key? key}) : super(key: key);
@@ -21,7 +22,7 @@ class RoomsPage extends StatelessWidget {
         title: Text('Chat Rooms'),
       ),
       body: StreamBuilder<List<types.Room>>(
-        stream: FirebaseChatCore.instance.rooms(),
+        stream: FirebaseChatCore.instance.rooms(orderByUpdatedAt: true),
         initialData: const [],
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -39,18 +40,37 @@ class RoomsPage extends StatelessWidget {
               itemCount: rooms.length,
               itemBuilder: (context, index) {
                 final room = rooms[index];
-                return ListTile(
-                  title: Text(room.name!),
-                  subtitle: Text(room.id),
-                  onTap: () {
-                    PersistentNavBarNavigator.pushNewScreen(
-                      context,
-                      screen: ChatScreen(room: snapshot.data![index]),
-                      withNavBar: false, // OPTIONAL VALUE. True by default.
-                      pageTransitionAnimation:
-                          PageTransitionAnimation.cupertino,
-                    );
-                  },
+
+                Color roomsBackgroundColor =
+                    Color.fromARGB(172, 222, 239, 255)!;
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: roomsBackgroundColor,
+                    ),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(room.imageUrl ??
+                            'https://firebasestorage.googleapis.com/v0/b/social-media-app-988e8.appspot.com/o/app_assets%2Fdefault.jpg?alt=media'), //default image if there is none.
+                      ),
+                      title: Text(
+                        room.name!,
+                        style: biggerTextStyle(),
+                      ),
+                      // subtitle: Text(room.id),
+                      onTap: () {
+                        PersistentNavBarNavigator.pushNewScreen(
+                          context,
+                          screen: ChatScreen(room: snapshot.data![index]),
+                          withNavBar: false, // OPTIONAL VALUE. True by default.
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.cupertino,
+                        );
+                      },
+                    ),
+                  ),
                 );
               },
             );

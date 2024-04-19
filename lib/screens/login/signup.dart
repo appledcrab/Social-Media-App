@@ -31,7 +31,9 @@ class _SignUpState extends State<SignUp> {
       String name = nameEditingController.text.trim();
 
       // Call signUpWithEmailAndPassword from AuthMethods
-      authMethods.registerWithEmailAndPassword(email, password).then((result) {
+      authMethods
+          .registerWithEmailAndPassword(email, password, name)
+          .then((result) {
         // Handle successful sign up, navigate to another screen or show a success message
         print("Sign up successful for $name with email: $email");
 
@@ -42,6 +44,8 @@ class _SignUpState extends State<SignUp> {
       });
     }
   }
+
+  bool _isPressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +62,7 @@ class _SignUpState extends State<SignUp> {
             Spacer(),
             Form(
               key: _formKey, // Associate _formKey with Form widget
+
               child: Column(
                 children: [
                   TextFormField(
@@ -105,18 +110,40 @@ class _SignUpState extends State<SignUp> {
               height: 16,
             ),
             GestureDetector(
-              onTap: () {
-                signUp();
+              onTapDown: (_) {
+                setState(() {
+                  _isPressed = true; // Set the button press state to true
+                });
               },
-              child: Container(
+              onTapUp: (_) {
+                setState(() {
+                  _isPressed = false; // Set the button press state to false
+                });
+                signUp(); // Perform the sign-up action
+              },
+              onTapCancel: () {
+                setState(() {
+                  _isPressed =
+                      false; // Reset the button press state if the tap is cancelled
+                });
+              },
+              child: AnimatedContainer(
+                duration:
+                    Duration(milliseconds: 100), // Optional: Animation duration
                 padding: EdgeInsets.symmetric(vertical: 16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30),
                   gradient: LinearGradient(
-                    colors: [
-                      const Color(0xff007EF4),
-                      Color.fromARGB(255, 86, 188, 42)
-                    ],
+                    colors:
+                        _isPressed // Change gradient colors based on button press state
+                            ? [
+                                Color.fromARGB(255, 244, 191, 0),
+                                Color.fromARGB(255, 86, 188, 42),
+                              ]
+                            : [
+                                const Color(0xff007EF4),
+                                Color.fromARGB(255, 86, 188, 42),
+                              ],
                   ),
                 ),
                 width: MediaQuery.of(context).size.width,
