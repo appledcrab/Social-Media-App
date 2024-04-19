@@ -6,17 +6,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:social_media_app/firebase_options.dart';
 import 'package:social_media_app/screens/bottom_nav.dart';
+import 'package:social_media_app/screens/message_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    name: 'social-media-app-988e8',
     options: DefaultFirebaseOptions.currentPlatform,
   );
   FirebaseChatCore.instance.setConfig(
     const FirebaseChatCoreConfig(
-      'social-media-app-988e8',
-      'chat_rooms',
+      '[DEFAULT]',
+      'rooms',
       'users',
     ),
   );
@@ -37,6 +37,7 @@ class MainApp extends StatelessWidget {
           return CircularProgressIndicator();
         } else if (snapshot.hasData) {
           return MaterialApp(
+            // home: BottomNav(),
             home: BottomNav(),
           );
         } else {

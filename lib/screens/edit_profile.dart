@@ -36,10 +36,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       var snapshot = await _firestoreService.getUserData(widget.userID);
       if (snapshot != null) {
         Map<String, dynamic> userData = snapshot;
-        _displayNameController.text = userData['displayName'] ?? '';
-        _bioController.text = userData['bio'] ?? '';
+        _displayNameController.text = userData['firstName'] ?? '';
+        _bioController.text = userData['metadata']?['bio'] as String? ?? '';
         setState(() {
-          _profileImageUrl = userData['photoUrl'];
+          _profileImageUrl = userData['imageUrl'];
         });
       }
     } catch (e) {
@@ -71,9 +71,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _updateProfile() async {
     try {
       await _firestore.collection('users').doc(widget.userID).update({
-        'displayName': _displayNameController.text.trim(),
-        'bio': _bioController.text.trim(),
-        'photoUrl': _profileImageUrl,
+        'firstName': _displayNameController.text.trim(),
+        'metadata.bio': _bioController.text.trim(),
+        'imageUrl': _profileImageUrl,
       });
       Navigator.pop(context); // Return to previous screen after profile update
     } catch (e) {

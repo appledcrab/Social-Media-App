@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:social_media_app/screens/user_profile_screen.dart';
 import 'package:social_media_app/services/auth_service.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -37,7 +38,18 @@ class ChatScreen extends StatelessWidget {
                   room.id,
                 );
               },
+              showUserNames: true,
+              showUserAvatars: true,
               user: types.User(id: user!.uid),
+              onAvatarTap: (user) {
+                print('Tapped on avatar of user: $user');
+                // Open user profile
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ProfileScreen(userID: user.id),
+                  ),
+                );
+              },
             );
           }
         },

@@ -1,14 +1,18 @@
-//Display list of conversations with other users.
-//shows list of (using flutter_chat_ui) rooms/ conversations with other users
-//if we can show the last message sent in the conversation (dont have to)
-
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'chat_screen.dart';
 
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:social_media_app/services/chat_service.dart';
+
 class RoomsPage extends StatelessWidget {
-  const RoomsPage({Key? key}) : super(key: key);
+  RoomsPage({Key? key}) : super(key: key);
+
+  ChatService _chatService = ChatService();
+
+// SHould probably move this to a service file
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +30,8 @@ class RoomsPage extends StatelessWidget {
             );
           } else if (snapshot.hasError) {
             return Center(
-              child: Text('Error: ${snapshot.error}'),
+              child: Text(
+                  'Error: ${snapshot.error?.toString() ?? "Unknown error"}'),
             );
           } else {
             final List<types.Room> rooms = snapshot.data!;
@@ -38,12 +43,12 @@ class RoomsPage extends StatelessWidget {
                   title: Text(room.name!),
                   subtitle: Text(room.id),
                   onTap: () {
-                    Navigator.push(
+                    PersistentNavBarNavigator.pushNewScreen(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            ChatScreen(room: snapshot.data![index]),
-                      ),
+                      screen: ChatScreen(room: snapshot.data![index]),
+                      withNavBar: false, // OPTIONAL VALUE. True by default.
+                      pageTransitionAnimation:
+                          PageTransitionAnimation.cupertino,
                     );
                   },
                 );
@@ -52,6 +57,18 @@ class RoomsPage extends StatelessWidget {
           }
         },
       ),
+
+      //testing to make a chatroom with a user - hardcoded.
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // Replace `otherUser` with the user you want to start a chat with
+      //     final otherUser = types.User(
+      //       id: 'EcfpwGQEOHd6NgfDyMdeQuAqXCS2', // Replace with the actual user ID
+      //     );
+      //     _chatService.createDirectChat(otherUser);
+      //   },
+      //   child: Icon(Icons.chat),
+      // ),
     );
   }
 }

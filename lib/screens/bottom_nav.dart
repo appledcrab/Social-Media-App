@@ -140,7 +140,7 @@ class _BottomNavState extends State<BottomNav> {
           handleAndroidBackButtonPress: true,
           resizeToAvoidBottomInset: true,
           stateManagement: true,
-          hideNavigationBarWhenKeyboardShows: true,
+          hideNavigationBarWhenKeyboardShows: false,
           decoration: NavBarDecoration(
             colorBehindNavBar: Colors.white,
           ),
