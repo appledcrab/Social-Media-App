@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:social_media_app/screens/message_screen.dart';
+import 'package:social_media_app/screens/user_explore.dart';
 import 'package:social_media_app/screens/user_profile_screen.dart';
 import 'package:social_media_app/screens/login/signin.dart'; // Import your sign-in screen
 import 'package:social_media_app/services/auth_service.dart';
@@ -43,13 +44,12 @@ class _BottomNavState extends State<BottomNav> {
             //just replace body
           ),
           Scaffold(
-            appBar: AppBar(title: Text('Settings')),
-            body: Center(child: Text('Screen 2')),
+            body: UserListPage(),
             // Add the Settings... or could try explore screen.
           ),
           Scaffold(
-            appBar: AppBar(title: Text('Screen 3')),
-            body: Center(child: Text('Screen 3')),
+            appBar: AppBar(title: Text('Creating Post')),
+            body: Center(child: Text('place to create posts')),
             //Adding posts screen
           ),
           Scaffold(
@@ -73,7 +73,7 @@ class _BottomNavState extends State<BottomNav> {
             inactiveColorPrimary: Colors.grey,
           ),
           PersistentBottomNavBarItem(
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.search),
             title: 'Search',
             activeColorPrimary: const Color.fromARGB(255, 233, 33, 243),
             inactiveColorPrimary: Colors.grey,

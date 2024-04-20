@@ -19,4 +19,27 @@ class FirestoreService {
       return {}; // Return an empty map in case of error
     }
   }
+
+//Reterns a list of all users in the Firestore database
+  Future<List<Map<String, dynamic>>> getAllUsers() async {
+    List<Map<String, dynamic>> userList = [];
+
+    try {
+      QuerySnapshot<Map<String, dynamic>> snapshot =
+          await _firestore.collection('users').get();
+
+      snapshot.docs.forEach((doc) {
+        Map<String, dynamic> userData = doc.data(); // Get the document data.
+        userData['uid'] =
+            doc.id; // Add the document ID as 'uid' to the user data map.
+
+        userList.add(userData); // Add the modified user data to the list.
+      });
+
+      return userList;
+    } catch (e) {
+      print('Error fetching users: $e');
+      return []; // Returning empty list in error case.
+    }
+  }
 }
