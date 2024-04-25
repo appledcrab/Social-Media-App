@@ -25,6 +25,8 @@ dependencies:
 
   # image uploader (eventually)
   image_picker: ^1.0.8
+  firebase_messaging: ^14.9.1
+  flutter_local_notifications: ^17.1.0
 
 dev_dependencies:
   flutter_test:

@@ -8,6 +8,13 @@ import 'package:social_media_app/firebase_options.dart';
 import 'package:social_media_app/screens/bottom_nav.dart';
 import 'package:social_media_app/screens/message_screen.dart';
 
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+Future<void> _messageHandler(RemoteMessage message) async {
+  print('background message ${message.notification!.body}');
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -20,6 +27,7 @@ void main() async {
       'users',
     ),
   );
+  FirebaseMessaging.onBackgroundMessage(_messageHandler);
 
   runApp(MainApp());
 }
@@ -37,7 +45,6 @@ class MainApp extends StatelessWidget {
           return CircularProgressIndicator();
         } else if (snapshot.hasData) {
           return MaterialApp(
-            // home: BottomNav(),
             home: BottomNav(),
           );
         } else {

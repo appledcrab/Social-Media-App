@@ -43,7 +43,7 @@ class ProfileScreen extends StatelessWidget {
 
               return Scaffold(
                 appBar: AppBar(
-                  title: Text('Profile'),
+                  title: Text('User Profile'),
                   actions: isCurrentUser
                       ? [
                           IconButton(
@@ -73,31 +73,43 @@ class ProfileScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      if (profileImageUrl != null)
-                        CircleAvatar(
-                          radius: 64,
-                          backgroundImage: NetworkImage(profileImageUrl),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 213, 233, 242),
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                      SizedBox(height: 16),
-                      if (displayName != null)
-                        Text(
-                          displayName,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        child: Column(
+                          children: [
+                            if (profileImageUrl != null)
+                              CircleAvatar(
+                                radius: 64,
+                                backgroundImage: NetworkImage(profileImageUrl),
+                              ),
+                            SizedBox(height: 16),
+                            if (displayName != null)
+                              Text(
+                                displayName,
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            SizedBox(height: 8),
+                            if (bio != null)
+                              Text(
+                                bio,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                                textAlign: TextAlign.start,
+                              ),
+                          ],
                         ),
-                      SizedBox(height: 8),
-                      if (bio != null)
-                        Text(
-                          bio,
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                          textAlign: TextAlign.start,
-                        ),
+                      ),
                       // Spacer(),
                       SizedBox(height: 16),
                       ElevatedButton(
