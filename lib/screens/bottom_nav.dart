@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:social_media_app/screens/homescreen.dart';
 import 'package:social_media_app/screens/message_screen.dart';
+import 'package:social_media_app/screens/post_screen.dart';
 import 'package:social_media_app/screens/user_explore.dart';
 import 'package:social_media_app/screens/user_profile_screen.dart';
 import 'package:social_media_app/screens/login/signin.dart'; // Import your sign-in screen
@@ -102,7 +104,7 @@ class _BottomNavState extends State<BottomNav> {
         return [
           Scaffold(
             appBar: AppBar(title: Text('Home Feed')),
-            body: Center(child: Text('Screen 1')),
+            body: HomeFeed(),
             // Add the homecreen to the body when its made
             //where the actual posts will be displayed
             //just replace body
@@ -112,8 +114,7 @@ class _BottomNavState extends State<BottomNav> {
             // Add the Settings... or could try explore screen.
           ),
           Scaffold(
-            appBar: AppBar(title: Text('Creating Post')),
-            body: Center(child: Text('place to create posts')),
+            body: CreatePostScreen(),
             //Adding posts screen
           ),
           Scaffold(
