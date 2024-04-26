@@ -86,7 +86,6 @@ class _BottomNavState extends State<BottomNav> {
       print('Message clicked!');
       _hideNotificationPopup();
     });
-    // _getCurrentUser();
   }
 
   Future<void> _getCurrentUser() async {
@@ -105,17 +104,12 @@ class _BottomNavState extends State<BottomNav> {
           Scaffold(
             appBar: AppBar(title: Text('Home Feed')),
             body: HomeFeed(),
-            // Add the homecreen to the body when its made
-            //where the actual posts will be displayed
-            //just replace body
           ),
           Scaffold(
             body: UserListPage(),
-            // Add the Settings... or could try explore screen.
           ),
           Scaffold(
             body: CreatePostScreen(),
-            //Adding posts screen
           ),
           Scaffold(
             body: RoomsPage(),

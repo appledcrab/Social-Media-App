@@ -5,11 +5,11 @@ Allow users to create new posts with text, images, or links.
 (maybe) Enable editing of posts after they have been published.
 */
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart'; // For image uploads
-import 'package:image_picker/image_picker.dart'; // For picking images
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:io'; // Import this at the top of your Dart file
+import 'dart:io';
 
 class CreatePostScreen extends StatefulWidget {
   @override

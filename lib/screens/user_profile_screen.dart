@@ -57,7 +57,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         throw Exception("Current user not found!");
       }
 
-      // Correctly cast the data retrieved from Firestore
       Map<String, dynamic> currentUserData =
           currentUserSnapshot.data() as Map<String, dynamic>;
       Map<String, dynamic>? metadata =
@@ -179,9 +178,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (currentUser?.uid != widget.userID)
             ElevatedButton(
               onPressed: () {
-                // if we were to add a follow feature, then heres a button
+                followUser();
               },
-              //change this text based on if the user is already followed or not / is the user
+              //change this text based on if the user is already followed or not / is the user (not done yet)
               child: Text(
                 'Follow',
                 style: TextStyle(

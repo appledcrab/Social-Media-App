@@ -48,11 +48,13 @@ class _HomeFeedState extends State<HomeFeed> {
               as Map<String, dynamic>?)?['metadata']['followList'] ??
           [];
 
-      // Now get posts from users in the followList
+      // Get posts from users in follow list, sorted by 'createdAt' descending
       if (followList.isNotEmpty) {
         QuerySnapshot postsSnapshot = await FirebaseFirestore.instance
-            .collection('test')
+            .collection('test') // Make sure this is the correct collection name
             .where('author_id', whereIn: followList)
+            .orderBy('created',
+                descending: true) // Order posts by creation time, descending
             .get();
 
         List<Map<String, dynamic>> followedPosts = postsSnapshot.docs
