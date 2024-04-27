@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // For date formatting
-import 'package:social_media_app/services/auth_service.dart';
+import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:social_media_app/services/auth_service.dart';
 
 class PostWidget extends StatefulWidget {
   final Map<String, dynamic> postData;
@@ -26,15 +26,15 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidgetState extends State<PostWidget> {
-  late Future<Map<String, dynamic>?> userDataFuture;
+  List<Map<String, dynamic>> comments = [];
 
   int? likesCount;
+  AuthService _authService = AuthService();
 
   @override
   void initState() {
     super.initState();
-    userDataFuture = AuthService().getUserData(widget.postData['author_id']);
-    likesCount = widget.postData['likes'] as int?;
+    fetchComments();
   }
 
   void _handleLike() {
@@ -44,7 +44,7 @@ class _PostWidgetState extends State<PostWidget> {
     });
 
     FirebaseFirestore.instance
-        .collection('posts')
+        .collection('test')
         .doc(widget.postData['id'])
         .update({'likes': FieldValue.increment(1)}).catchError(
             (e) => print('Error updating likes: $e'));
@@ -62,6 +62,20 @@ class _PostWidgetState extends State<PostWidget> {
     }
   }
 
+  void fetchComments() {
+    FirebaseFirestore.instance
+        .collection('comments')
+        .where('postId', isEqualTo: widget.postData['id'])
+        .snapshots()
+        .listen((data) {
+      setState(() {
+        comments =
+            data.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+        likesCount = widget.postData['likes'];
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -72,7 +86,7 @@ class _PostWidgetState extends State<PostWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             FutureBuilder<Map<String, dynamic>?>(
-              future: userDataFuture,
+              future: AuthService().getUserData(widget.postData['author_id']),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
@@ -93,9 +107,35 @@ class _PostWidgetState extends State<PostWidget> {
             if (widget.postData['imageUrl'] != null)
               _buildPostImage(widget.postData['imageUrl']),
             _buildFooter(),
+            Divider(),
+            _buildCommentsSection(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildCommentsSection() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child:
+              Text("Comments", style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: comments.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              leading: Icon(Icons.comment),
+              title: Text(comments[index]['text']),
+              // subtitle: Text("by ${comments[index]['author_id']}"),
+            );
+          },
+        ),
+      ],
     );
   }
 

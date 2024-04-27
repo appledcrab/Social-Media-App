@@ -28,7 +28,6 @@ class _CommentScreenState extends State<CommentScreen> {
       await FirebaseFirestore.instance.collection('comments').add({
         'postId': widget.postId,
         'text': commentText,
-        // add other fields such as 'author', 'createdAt' etc. as necessary
         'author': user.uid,
         'createdAt': FieldValue.serverTimestamp(),
       });

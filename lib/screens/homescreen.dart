@@ -48,24 +48,31 @@ class _HomeFeedState extends State<HomeFeed> {
           [];
 
       if (followList.isNotEmpty) {
-        QuerySnapshot postsSnapshot = await FirebaseFirestore.instance
-            .collection('test')
+        // Setting up a real-time subscription to Firestore
+        FirebaseFirestore.instance
+            .collection('test') // Ensure this is your posts collection name
             .where('author_id', whereIn: followList)
             .orderBy('created', descending: true)
-            .get();
+            .snapshots()
+            .listen((snapshot) {
+          List<Map<String, dynamic>> newPosts = snapshot.docs.map((doc) {
+            return {
+              'id': doc.id, // Include the Firestore document ID as 'id'
+              ...doc.data() as Map<String, dynamic>,
+            };
+          }).toList();
 
-        List<Map<String, dynamic>> followedPosts = postsSnapshot.docs
-            .map((doc) => doc.data() as Map<String, dynamic>)
-            .toList();
-
-        setState(() {
-          _followedUserPosts = followedPosts;
+          if (mounted) {
+            setState(() {
+              _followedUserPosts = newPosts;
+            });
+          }
         });
       } else {
         print("Follow list is empty or not found");
       }
     } catch (e) {
-      print("Error loading followed user posts: $e");
+      print("Error setting up real-time post updates: $e");
     }
   }
 
