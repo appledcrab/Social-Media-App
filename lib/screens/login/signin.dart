@@ -150,7 +150,7 @@ class _SignInState extends State<SignIn> {
                 ),
                 width: MediaQuery.of(context).size.width,
                 child: Text(
-                  "Sign Up",
+                  "Sign In",
                   style: biggerTextStyle(),
                   textAlign: TextAlign.center,
                 ),
