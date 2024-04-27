@@ -9,6 +9,7 @@ class PostWidget extends StatefulWidget {
   final VoidCallback onCommentPressed;
   final VoidCallback? onDeletePressed;
   final VoidCallback? onEditPressed;
+  final bool canEdit;
 
   PostWidget({
     Key? key,
@@ -17,6 +18,7 @@ class PostWidget extends StatefulWidget {
     required this.onCommentPressed,
     this.onDeletePressed,
     this.onEditPressed,
+    this.canEdit = false,
   }) : super(key: key);
 
   @override
@@ -147,12 +149,12 @@ class _PostWidgetState extends State<PostWidget> {
           icon: Icon(Icons.comment),
           onPressed: widget.onCommentPressed,
         ),
-        if (widget.onEditPressed != null)
+        if (widget.canEdit && widget.onEditPressed != null)
           IconButton(
             icon: Icon(Icons.edit),
             onPressed: _handleEdit,
           ),
-        if (widget.onDeletePressed != null)
+        if (widget.canEdit && widget.onDeletePressed != null)
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: _handleDelete,

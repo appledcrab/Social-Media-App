@@ -13,7 +13,11 @@ import 'package:social_media_app/screens/edit_post_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String userID;
-  ProfileScreen({Key? key, required this.userID}) : super(key: key);
+
+  ProfileScreen({
+    Key? key,
+    required this.userID,
+  }) : super(key: key);
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -193,7 +197,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           followUser();
         }
       },
-      child: Text(_isFollowing ? 'Unfollow' : 'Follow'),
+      child: Text(_isFollowing ? 'UnfollowA' : 'FollowA'),
     );
   }
 
@@ -233,9 +237,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             textAlign: TextAlign.start,
           ),
           SizedBox(height: 16),
-          // We only show the follow/unfollow button if it's not the current user's profile
-          if (currentUser?.uid != widget.userID)
-            _buildFollowButton(), // Use the _buildFollowButton method
+          if (currentUser?.uid != widget.userID) _buildFollowButton(),
           SizedBox(height: 16),
         ],
       ),
@@ -246,9 +248,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return ListView.builder(
       shrinkWrap: true, // Important to prevent infinite height error
       physics: NeverScrollableScrollPhysics(), // Disables scroll within scroll
+
       itemCount: _userPosts.length,
       itemBuilder: (context, index) {
         Map<String, dynamic> post = _userPosts[index];
+        bool canEdit = currentUser?.uid ==
+            post['author_id']; // Determine if the post can be edited
         return PostWidget(
           postData: post,
           onLikePressed: () {
@@ -278,6 +283,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onDeletePressed: () async {
             _deletePost(post['id']);
           },
+          canEdit: canEdit,
         );
       },
     );
@@ -292,7 +298,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         title: Text('User Profile'),
         actions: [
-          if (isCurrentUser) // currentUser.should be replaced with isCurrentUser
+          if (isCurrentUser)
             IconButton(
               icon: Icon(Icons.edit),
               onPressed: () {
@@ -306,7 +312,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 );
               },
             ),
-          if (!isCurrentUser) // currentUser.should be replaced with isCurrentUser
+          if (!isCurrentUser)
             IconButton(
               icon: Icon(Icons.chat),
               onPressed: () {
@@ -321,22 +327,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
-          // Encapsulate widgets with ListView for scrolling
           children: [
-            // User profile information container goes here...
+            if (userData != null) _buildUserProfile(userData!),
             SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                // Here you would put the logic for the follow feature, if you desire to implement it
-              },
-              child: Text(
-                'Follow', // The text would need to change based on the follow state
-                style: TextStyle(fontSize: 16),
-              ),
-            ),
             SizedBox(height: 16),
-            Text("Here will be the list of posts."),
-            // Here you would put your ListView.builder or similar widget to display the posts
+            if (_userPosts.isNotEmpty) _buildPostsList(),
           ],
         ),
       ),
