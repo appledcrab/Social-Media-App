@@ -1,8 +1,6 @@
-//Main homescreen that will have the feed.
 // News feed from … community or following
 // Infinite? Scroll of posts
 // Being able to interact with posts
-// Like, comment
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -49,13 +47,11 @@ class _HomeFeedState extends State<HomeFeed> {
               as Map<String, dynamic>?)?['metadata']['followList'] ??
           [];
 
-      // Get posts from users in follow list, sorted by 'createdAt' descending
       if (followList.isNotEmpty) {
         QuerySnapshot postsSnapshot = await FirebaseFirestore.instance
-            .collection('test') // Make sure this is the correct collection name
+            .collection('test')
             .where('author_id', whereIn: followList)
-            .orderBy('created',
-                descending: true) // Order posts by creation time, descending
+            .orderBy('created', descending: true)
             .get();
 
         List<Map<String, dynamic>> followedPosts = postsSnapshot.docs
