@@ -10,7 +10,6 @@ import 'package:social_media_app/screens/message_screen.dart';
 
 // import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:social_media_app/screens/post_screen.dart';
 
 Future<void> _messageHandler(RemoteMessage message) async {
   print('background message ${message.notification!.body}');

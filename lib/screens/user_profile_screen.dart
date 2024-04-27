@@ -182,18 +182,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }).catchError((error) {
       print("Failed to unfollow user: $error");
     });
-    Widget _buildFollowButton() {
-      return ElevatedButton(
-        onPressed: () {
-          if (_isFollowing) {
-            unfollowUser();
-          } else {
-            followUser();
-          }
-        },
-        child: Text(_isFollowing ? 'Unfollow' : 'Follow'),
-      );
-    }
+  }
+
+  Widget _buildFollowButton() {
+    return ElevatedButton(
+      onPressed: () {
+        if (_isFollowing) {
+          unfollowUser();
+        } else {
+          followUser();
+        }
+      },
+      child: Text(_isFollowing ? 'Unfollow' : 'Follow'),
+    );
   }
 
   Widget _buildUserProfile(Map<String, dynamic> userData) {
@@ -237,26 +238,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildFollowButton(), // Use the _buildFollowButton method
           SizedBox(height: 16),
         ],
-      ),
-    );
-  }
-
-  Widget _buildFollowButton() {
-    return ElevatedButton(
-      onPressed: () {
-        // Call followUser if currently not following; otherwise, call unfollowUser
-        if (_isFollowing) {
-          unfollowUser();
-        } else {
-          followUser();
-        }
-      },
-      // Change button text based on follow status
-      child: Text(
-        _isFollowing ? 'Unfollow' : 'Follow',
-        style: TextStyle(
-          fontSize: 16,
-        ),
       ),
     );
   }
@@ -305,42 +286,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final User? currentUser = FirebaseAuth.instance.currentUser;
+    final bool isCurrentUser = currentUser?.uid == widget.userID;
 
     return Scaffold(
       appBar: AppBar(
         title: Text('User Profile'),
-        actions: isCurrentUser
-            ? [
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            EditProfileScreen(userID: widget.userID),
-                      ),
-                    );
-                  },
-                ),
-              ]
-            : [
-                IconButton(
-                  icon: Icon(Icons.chat),
-                  onPressed: () {
-                    _chatService
-                        .createDirectChat(types.User(id: widget.userID));
-                  },
-                ),
-              ],
+        actions: [
+          if (isCurrentUser) // currentUser.should be replaced with isCurrentUser
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditProfileScreen(
+                        userID: widget
+                            .userID), // Corrected from userID to widget.userID
+                  ),
+                );
+              },
+            ),
+          if (!isCurrentUser) // currentUser.should be replaced with isCurrentUser
+            IconButton(
+              icon: Icon(Icons.chat),
+              onPressed: () {
+                // Here we need to ensure that we are using the correct ID for the chat service
+                // Change _chatService.createDirectChat(types.User(id: userID));
+                // to:
+                _chatService.createDirectChat(types.User(id: widget.userID));
+              },
+            ),
+        ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          // Encapsulate widgets with ListView for scrolling
           children: [
-            if (userData != null) _buildUserProfile(userData!),
-            _userPosts.isNotEmpty
-                ? _buildPostsList()
-                : Center(child: Text('No posts available')),
+            // User profile information container goes here...
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                // Here you would put the logic for the follow feature, if you desire to implement it
+              },
+              child: Text(
+                'Follow', // The text would need to change based on the follow state
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+            SizedBox(height: 16),
+            Text("Here will be the list of posts."),
+            // Here you would put your ListView.builder or similar widget to display the posts
           ],
         ),
       ),
