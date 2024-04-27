@@ -305,11 +305,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EditProfileScreen(
-                        userID: widget
-                            .userID), // Corrected from userID to widget.userID
+                    builder: (context) =>
+                        EditProfileScreen(userID: widget.userID),
                   ),
-                );
+                ).then((_) {
+                  _fetchUserData(); // Re-fetch the user data after the EditProfileScreen is popped
+                });
               },
             ),
           if (!isCurrentUser)
