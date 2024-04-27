@@ -61,6 +61,8 @@ class AuthService {
       'photoUrl':
           'https://firebasestorage.googleapis.com/v0/b/social-media-app-988e8.appspot.com/o/app_assets%2Fdefault.jpg?alt=media',
       'displayName': username, // This can be any name the user chooses
+      'followList': ["consoleID"],
+      'followers': 0
     };
 
     // Create user document in Firestore
@@ -75,7 +77,11 @@ class AuthService {
       firstName: userData['displayName']
           as String?, // Use displayName or split part of it if needed
       imageUrl: userData['photoUrl'] as String?,
-      metadata: {'bio': userData['bio']},
+      metadata: {
+        'bio': userData['bio'],
+        'followList': userData['followList'],
+        'followers': userData['followers'],
+      },
     );
 
     // Use flutter_chat_core to update the user information
@@ -126,7 +132,7 @@ class AuthService {
     return user.uid;
   }
 
-  //This creates a user document in the 'users' collection with the user's ID as the document ID
+  //This creates a user document in the 'users' collection with the user's ID as the document ID  - I THINK THIS IS UNUSED
   Future<void> _createUserDocument(String uid) async {
     final _firestore = FirebaseFirestore.instance;
     try {
@@ -140,6 +146,25 @@ class AuthService {
     } catch (e) {
       print('Error creating user document: $e');
       throw e;
+    }
+  }
+
+// For getting info for posts
+  Future<Map<String, dynamic>?> getUserData(String userId) async {
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      if (userDoc.exists) {
+        return userDoc.data() as Map<String, dynamic>?;
+      } else {
+        print('No user found for ID: $userId');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching user data: $e');
+      return null; // Return null in case of error
     }
   }
 }

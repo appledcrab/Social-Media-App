@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyAM8gEdKGuVAfMQZ1CZGRL9yAyJ4vpqYuI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>218396810375</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.socialMediaApp.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>social-media-app-988e8</string>
+	<key>STORAGE_BUCKET</key>
+	<string>social-media-app-988e8.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:218396810375:ios:19eed91f163ae05d8cac22</string>
+	<key>DATABASE_URL</key>
+	<string>https://social-media-app-988e8-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

@@ -1,26 +1,91 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:social_media_app/screens/homescreen.dart';
 import 'package:social_media_app/screens/message_screen.dart';
+import 'package:social_media_app/screens/post_screen.dart';
 import 'package:social_media_app/screens/user_explore.dart';
 import 'package:social_media_app/screens/user_profile_screen.dart';
 import 'package:social_media_app/screens/login/signin.dart'; // Import your sign-in screen
 import 'package:social_media_app/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+import "package:social_media_app/main.dart";
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 class BottomNav extends StatefulWidget {
   @override
   _BottomNavState createState() => _BottomNavState();
+}
+
+OverlayEntry? _notificationPopup;
+
+void _showNotificationPopup(String message, BuildContext context, Color color) {
+  _notificationPopup?.remove(); // Remove any existing popup
+  _notificationPopup = OverlayEntry(
+    builder: (context) => Positioned(
+      top: 50.0, // Distance from the top
+      right: 10.0,
+      left: 10.0,
+      child: Material(
+        elevation: 10.0,
+        child: Container(
+          padding: EdgeInsets.all(10),
+          color: color,
+          child: Text(
+            message,
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
+    ),
+  );
+
+  Overlay.of(context)!.insert(_notificationPopup!);
+
+  Future.delayed(Duration(seconds: 5), () {
+    _hideNotificationPopup();
+  });
+}
+
+void _hideNotificationPopup() {
+  _notificationPopup?.remove();
+  _notificationPopup = null;
 }
 
 class _BottomNavState extends State<BottomNav> {
   AuthService authMethods = AuthService();
   late User currentUser;
 
+  late FirebaseMessaging messaging;
+  String? notificationText;
+
   @override
   void initState() {
     super.initState();
     currentUser = authMethods.getCurrentUser()!;
-    // _getCurrentUser();
+    messaging = FirebaseMessaging.instance;
+    messaging.subscribeToTopic("messaging");
+    messaging.getToken().then((value) {
+      print("CURRENT USER TOKEN:" + value!);
+    });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+      print("Message received");
+      String messageType = event.data['type'];
+      Color bgColor = Colors.blue;
+      if (messageType == 'post') {
+        bgColor = Colors.orange;
+      }
+      //otherwise its message
+
+      _showNotificationPopup(event.notification!.body!, context, bgColor);
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      print('Message clicked!');
+      _hideNotificationPopup();
+    });
   }
 
   Future<void> _getCurrentUser() async {
@@ -38,19 +103,13 @@ class _BottomNavState extends State<BottomNav> {
         return [
           Scaffold(
             appBar: AppBar(title: Text('Home Feed')),
-            body: Center(child: Text('Screen 1')),
-            // Add the homecreen to the body when its made
-            //where the actual posts will be displayed
-            //just replace body
+            body: HomeFeed(),
           ),
           Scaffold(
             body: UserListPage(),
-            // Add the Settings... or could try explore screen.
           ),
           Scaffold(
-            appBar: AppBar(title: Text('Creating Post')),
-            body: Center(child: Text('place to create posts')),
-            //Adding posts screen
+            body: CreatePostScreen(),
           ),
           Scaffold(
             body: RoomsPage(),
